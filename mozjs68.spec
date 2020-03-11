@@ -1,7 +1,7 @@
 %global pre_release %{nil}
 %define pkgname mozjs
-%define api 60
-%define major 60
+%define api 68
+%define major 68
 %define majorlib 0
 %define libmozjs %mklibname %{pkgname} %{api} %{major}
 %define libmozjs_devel %mklibname %{pkgname} %{api} -d
@@ -16,7 +16,7 @@
 
 Summary:	JavaScript interpreter and libraries
 Name:		mozjs60
-Version:	60.6.3
+Version:	68.5.0
 Release:	2
 License:	MPLv2.0 and BSD and GPLv2+ and GPLv3+ and LGPLv2.1 and LGPLv2.1+
 URL:		https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Releases/%{major}
