@@ -163,6 +163,12 @@ export CFLAGS="%{optflags}"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="$CFLAGS"
 
+%ifarch %{arm} %{armx}
+export CFLAGS="$CFLAGS -fPIC"
+export CXXFLAGS="$CXXFLAGS -fPIC"
+export LDFLAGS="$LDFLAGS -fPIC -fuse-ld=bfd"
+%endif
+
 %configure \
   --with-system-icu \
   --enable-posix-nspr-emulation \
