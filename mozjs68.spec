@@ -66,6 +66,8 @@ BuildRequires:	pkgconfig(python2)
 BuildRequires:	readline-devel
 BuildRequires:	zip
 BuildRequires:	python
+BuildRequires:	rust
+BuildRequires:	cargo
 
 %description
 JavaScript is the Netscape-developed object scripting language used in millions
