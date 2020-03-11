@@ -27,7 +27,7 @@ Patch0001:      fix-soname.patch
 Patch0002:      copy-headers.patch
 Patch0003:      tests-increase-timeout.patch
 #Patch0008:      Always-use-the-equivalent-year-to-determine-the-time-zone.patch
-Patch0009:      icu_sources_data.py-Decouple-from-Mozilla-build-system.patch
+#Patch0009:      icu_sources_data.py-Decouple-from-Mozilla-build-system.patch
 Patch0010:      icu_sources_data-Write-command-output-to-our-stderr.patch
 Patch0011:      tests-For-tests-that-are-skipped-on-64-bit-mips64-is-also.patch
 
@@ -90,7 +90,7 @@ pushd ../..
 %patch0002 -p1
 %patch0003 -p1
 #patch0008 -p1
-%patch0009 -p1
+#patch0009 -p1
 %patch0010 -p1
 %patch0011 -p1
 
