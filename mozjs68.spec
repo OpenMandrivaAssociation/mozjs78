@@ -45,6 +45,7 @@ Patch31:        Save-and-restore-non-volatile-x28-on-ARM64-for-generated-unboxed
 Patch32:	firefox-60.2.2-add-riscv64.patch
 Patch33:	mozjs-52.8.1-fix-crash-on-startup.patch
 
+BuildRequires:  autoconf
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(nspr)
 BuildRequires:	pkgconfig(libffi)
