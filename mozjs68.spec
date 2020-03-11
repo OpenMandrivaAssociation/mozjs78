@@ -89,7 +89,7 @@ pushd ../..
 %patch0001 -p1
 %patch0002 -p1
 %patch0003 -p1
-%patch0008 -p1
+#patch0008 -p1
 %patch0009 -p1
 %patch0010 -p1
 %patch0011 -p1
