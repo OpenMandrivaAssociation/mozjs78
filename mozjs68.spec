@@ -68,6 +68,7 @@ BuildRequires:	zip
 BuildRequires:	python
 BuildRequires:	rust
 BuildRequires:	cargo
+BuildRequires:	llvm-devel clang-devel
 
 %description
 JavaScript is the Netscape-developed object scripting language used in millions
