@@ -1,8 +1,7 @@
-diff --git a/build/moz.configure/init.configure b/build/moz.configure/init.configure
-index 83b8d7055..200ea47e5 100644
---- a/build/moz.configure/init.configure
-+++ b/build/moz.configure/init.configure
-@@ -673,6 +673,9 @@ def split_triplet(triplet, allow_unknown=False):
+diff -up firefox-68.5.0/build/moz.configure/init.configure.p32~ firefox-68.5.0/build/moz.configure/init.configure
+--- firefox-68.5.0/build/moz.configure/init.configure.p32~	2020-02-07 01:26:51.000000000 +0100
++++ firefox-68.5.0/build/moz.configure/init.configure	2020-03-11 19:01:01.144836575 +0100
+@@ -730,6 +730,9 @@ def split_triplet(triplet, allow_unknown
      elif cpu.startswith('aarch64'):
          canonical_cpu = 'aarch64'
          endianness = 'little'
@@ -12,61 +11,22 @@ index 83b8d7055..200ea47e5 100644
      elif cpu == 'sh4':
          canonical_cpu = 'sh4'
          endianness = 'little'
-diff --git a/js/src/jit/AtomicOperations.h b/js/src/jit/AtomicOperations.h
-index 3501e65b8..fda0b1487 100644
---- a/js/src/jit/AtomicOperations.h
-+++ b/js/src/jit/AtomicOperations.h
-@@ -393,6 +393,8 @@ inline bool AtomicOperations::isLockfreeJS(int32_t size) {
- #include "jit/none/AtomicOperations-feeling-lucky.h"
- #elif defined(__s390__) || defined(__s390x__)
- #include "jit/none/AtomicOperations-feeling-lucky.h"
+diff -up firefox-68.5.0/js/src/jit/AtomicOperations.h.p32~ firefox-68.5.0/js/src/jit/AtomicOperations.h
+--- firefox-68.5.0/js/src/jit/AtomicOperations.h.p32~	2020-03-11 19:01:01.144836575 +0100
++++ firefox-68.5.0/js/src/jit/AtomicOperations.h	2020-03-11 19:02:01.280833657 +0100
+@@ -393,6 +393,8 @@ inline bool AtomicOperations::isLockfree
+     defined(__PPC64LE__) || defined(__alpha__) || defined(__hppa__) ||  \
+     defined(__sh__) || defined(__s390__) || defined(__s390x__)
+ #  include "jit/shared/AtomicOperations-feeling-lucky.h"
 +#elif defined(__riscv)
 +#include "jit/none/AtomicOperations-feeling-lucky.h"
  #else
- #error "No AtomicOperations support provided for this platform"
+ #  error "No AtomicOperations support provided for this platform"
  #endif
-diff --git a/js/src/jit/none/AtomicOperations-feeling-lucky.h b/js/src/jit/none/AtomicOperations-feeling-lucky.h
-index c0b436995..f0e2d7150 100644
---- a/js/src/jit/none/AtomicOperations-feeling-lucky.h
-+++ b/js/src/jit/none/AtomicOperations-feeling-lucky.h
-@@ -80,6 +80,14 @@
- #define GNUC_COMPATIBLE
- #endif
- 
-+#ifdef __riscv
-+#  define GNUC_COMPATIBLE
-+#  if __riscv_xlen == 64
-+#    define HAS_64BIT_ATOMICS
-+#    define HAS_64BIT_LOCKFREE
-+#  endif
-+#endif
-+
- // The default implementation tactic for gcc/clang is to use the newer
- // __atomic intrinsics added for use in C++11 <atomic>.  Where that
- // isn't available, we use GCC's older __sync functions instead.
-diff --git a/mfbt/tests/TestPoisonArea.cpp b/mfbt/tests/TestPoisonArea.cpp
-index 06c24ed03..708ea558e 100644
---- a/mfbt/tests/TestPoisonArea.cpp
-+++ b/mfbt/tests/TestPoisonArea.cpp
-@@ -160,6 +160,14 @@
- #elif defined __aarch64__
- #define RETURN_INSTR 0xd65f03c0 /* ret */
- 
-+#elif defined(__riscv) && defined(__riscv_xlen) && __riscv_xlen == 64
-+#if defined(__riscv_compressed)
-+#define RETURN_INSTR 0x8082 /* ret */
-+#define RETURN_INSTR_TYPE uint16_t
-+#else
-+#define RETURN_INSTR 0x00008067 /* ret */
-+#endif
-+
- #elif defined __ia64
- struct ia64_instr { uint32_t mI[4]; };
- static const ia64_instr _return_instr =
-diff --git a/python/mozbuild/mozbuild/configure/constants.py b/python/mozbuild/mozbuild/configure/constants.py
-index 33ae5a456..3edb0d618 100644
---- a/python/mozbuild/mozbuild/configure/constants.py
-+++ b/python/mozbuild/mozbuild/configure/constants.py
+diff -up firefox-68.5.0/mfbt/tests/TestPoisonArea.cpp.p32~ firefox-68.5.0/mfbt/tests/TestPoisonArea.cpp
+diff -up firefox-68.5.0/python/mozbuild/mozbuild/configure/constants.py.p32~ firefox-68.5.0/python/mozbuild/mozbuild/configure/constants.py
+--- firefox-68.5.0/python/mozbuild/mozbuild/configure/constants.py.p32~	2020-02-07 01:27:24.000000000 +0100
++++ firefox-68.5.0/python/mozbuild/mozbuild/configure/constants.py	2020-03-11 19:01:01.144836575 +0100
 @@ -50,6 +50,7 @@ CPU_bitness = {
      'mips64': 64,
      'ppc': 32,

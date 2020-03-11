@@ -15,35 +15,47 @@
 %endif
 
 Summary:	JavaScript interpreter and libraries
-Name:		mozjs60
-Version:	68.5.0
-Release:	2
+Name:		mozjs68
+Version:	68.6.0
+Release:	1
 License:	MPLv2.0 and BSD and GPLv2+ and GPLv3+ and LGPLv2.1 and LGPLv2.1+
 URL:		https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Releases/%{major}
 Source0:        https://ftp.mozilla.org/pub/firefox/releases/%{version}esr/source/firefox-%{version}esr.source.tar.xz
 Source10:	http://ftp.gnu.org/gnu/autoconf/autoconf-2.13.tar.gz
-# Patches from Debian mozjs52_52.3.1-4.debian.tar.xz:
-Patch0001:      fix-soname.patch
-Patch0002:      copy-headers.patch
-Patch0003:      tests-increase-timeout.patch
-#Patch0008:      Always-use-the-equivalent-year-to-determine-the-time-zone.patch
-#Patch0009:      icu_sources_data.py-Decouple-from-Mozilla-build-system.patch
-#Patch0010:      icu_sources_data-Write-command-output-to-our-stderr.patch
-#Patch0011:      tests-For-tests-that-are-skipped-on-64-bit-mips64-is-also.patch
 
+# Patches from Debian mozjs60, rebased for mozjs68:
+Patch01:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/fix-soname.patch
+Patch02:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/copy-headers.patch
+Patch03:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/tests-increase-timeout.patch
+Patch09:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/icu_sources_data.py-Decouple-from-Mozilla-build-system.patch
+Patch10:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/icu_sources_data-Write-command-output-to-our-stderr.patch
+ 
 # Build fixes - https://hg.mozilla.org/mozilla-central/rev/ca36a6c4f8a4a0ddaa033fdbe20836d87bbfb873
-Patch12:        emitter.patch
-Patch13:        emitter_test.patch
-Patch14:        init_patch.patch
-
+Patch12:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/emitter.patch
+Patch13:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/emitter_test.patch
+ 
+# Build fixes
+Patch14:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/init_patch.patch
+# TODO: Check with mozilla for cause of these fails and re-enable spidermonkey compile time checks if needed
+Patch15:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/spidermonkey_checks_disable.patch
+ 
+# armv7 fixes
+Patch16:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/rust_armv7.patch
+Patch17:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/armv7_disable_WASM_EMULATE_ARM_UNALIGNED_FP_ACCESS.patch
+ 
 # Patches from Fedora firefox package:
-Patch26:        build-icu-big-endian.patch
+Patch26:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/build-icu-big-endian.patch
+ 
+# Support Python 3 in js tests
+Patch30:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/jstests_python-3.patch
 
 # aarch64 fixes for -O2
-Patch30:        Save-x28-before-clobbering-it-in-the-regex-compiler.patch
-Patch31:        Save-and-restore-non-volatile-x28-on-ARM64-for-generated-unboxed-object-constructor.patch
-Patch32:	firefox-60.2.2-add-riscv64.patch
-Patch33:	mozjs-52.8.1-fix-crash-on-startup.patch
+Patch40:	Save-x28-before-clobbering-it-in-the-regex-compiler.patch
+Patch41:	Save-and-restore-non-volatile-x28-on-ARM64-for-generated-unboxed-object-constructor.patch
+
+Patch50:	firefox-60.2.2-add-riscv64.patch
+Patch51:	mozjs-52.8.1-fix-crash-on-startup.patch
+Patch52:	mozjs-68-compile.patch
 
 #BuildRequires:  autoconf
 BuildRequires:	pkgconfig(icu-i18n)
@@ -86,30 +98,37 @@ you will need to install %{name}-devel.
 
 pushd ../..
 %config_update
-%patch0001 -p1
-%patch0002 -p1
-%patch0003 -p1
-#patch0008 -p1
-#patch0009 -p1
-#patch0010 -p1
-#patch0011 -p1
 
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-
+%patch01 -p1 -b .01~
+%patch02 -p1 -b .02~
+%patch03 -p1 -b .03~
+%patch09 -p1 -b .09~
+%patch10 -p1 -b .10~
+ 
+%patch12 -p1 -b .12~
+%patch13 -p1 -b .13~
+%patch14 -p1 -b .14~
+%patch15 -p1 -b .15~
+ 
+%ifarch %{arm}
+# Correct armv7hl rust triple seems to be armv7-unknown-linux-gnueabihf and not armv7-unknown-linux-gnueabi
+%patch16 -p1 -b .16~
+# Disable WASM_EMULATE_ARM_UNALIGNED_FP_ACCESS as it causes the compilation to fail
+# https://bugzilla.mozilla.org/show_bug.cgi?id=1526653
+%patch17 -p1 -b .17~
+%endif
+ 
 # Patch for big endian platforms only
 %if 0%{?big_endian}
-%patch26 -p1 -b .icu
+%patch26 -p1 -b .26~
 %endif
+ 
+# Execute tests with Python 3
+%patch30 -p1 -b .30~
 
-# aarch64 -O2 fixes
-%ifarch aarch64
-%patch30 -p1
-%patch31 -p1
-%endif
-%patch32 -p1
-%patch33 -p1
+%patch50 -p1 -b .50~
+%patch51 -p1 -b .51~
+%patch52 -p1 -b .52~
 
 # make sure we don't ever accidentally link against bundled security libs
 rm -rf security/
@@ -131,21 +150,18 @@ TOP="$(pwd)"
 cd autoconf-2.13
 ./configure --prefix=$TOP/ac213bin
 %make_build
-%make install
+%make_build install
 
 %build
 %setup_compile_flags
-# Need -fpermissive due to some macros using nullptr as bool false
+
 export AUTOCONF="`pwd`"/ac213bin/bin/autoconf
-export CFLAGS="%{optflags} -fuse-ld=bfd"
+export CFLAGS="%{optflags}"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="$CFLAGS"
-export CC=gcc
-export CXX=g++
-export LD=ld.bfd
 
 %configure \
-  --without-system-icu \
+  --with-system-icu \
   --enable-posix-nspr-emulation \
   --with-system-zlib \
   --enable-tests \
@@ -191,12 +207,12 @@ ln -s libmozjs-%{major}.so.0 %{buildroot}%{_libdir}/libmozjs-%{major}.so
 tests/jstests.py -d -s --no-progress ../../js/src/js/src/shell/js || :
 
 %files
-%{_bindir}/js60
+%{_bindir}/js68
 
 %files -n %{libmozjs}
-%{_libdir}/libmozjs-60.so.%{majorlib}*
+%{_libdir}/libmozjs-68.so.%{majorlib}*
 
 %files -n %{libmozjs_devel}
-%{_libdir}/libmozjs-60.so
+%{_libdir}/libmozjs-68.so
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/mozjs-%{major}

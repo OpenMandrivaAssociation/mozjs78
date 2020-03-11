@@ -1,0 +1,40 @@
+diff -up firefox-68.5.0/mfbt/FunctionTypeTraits.h.omv~ firefox-68.5.0/mfbt/FunctionTypeTraits.h
+--- firefox-68.5.0/mfbt/FunctionTypeTraits.h.omv~	2020-03-11 20:03:41.153654153 +0100
++++ firefox-68.5.0/mfbt/FunctionTypeTraits.h	2020-03-11 20:03:58.716653301 +0100
+@@ -17,7 +17,7 @@ namespace mozilla {
+ //
+ // Given a function type, FunctionTypeTraits will expose the following members:
+ // - ReturnType: Return type.
+-// - arity: Number of parameters (size_t).
++// - arity: Number of parameters (std::size_t).
+ // - ParameterType<N>: Type of the Nth** parameter, 0-indexed.
+ //
+ // ** `ParameterType<N>` with `N` >= `arity` is allowed and gives `void`.
+@@ -56,13 +56,13 @@ namespace detail {
+ 
+ // If `safe`, retrieve the `N`th type from `As`, otherwise `void`.
+ // See top description for reason.
+-template <bool safe, size_t N, typename... As>
++template <bool safe, std::size_t N, typename... As>
+ struct TupleElementSafe;
+-template <size_t N, typename... As>
++template <std::size_t N, typename... As>
+ struct TupleElementSafe<true, N, As...> {
+   using Type = typename std::tuple_element<N, std::tuple<As...>>::type;
+ };
+-template <size_t N, typename... As>
++template <std::size_t N, typename... As>
+ struct TupleElementSafe<false, N, As...> {
+   using Type = void;
+ };
+@@ -70,8 +70,8 @@ struct TupleElementSafe<false, N, As...>
+ template <typename R, typename... As>
+ struct FunctionTypeTraitsHelper {
+   using ReturnType = R;
+-  static constexpr size_t arity = sizeof...(As);
+-  template <size_t N>
++  static constexpr std::size_t arity = sizeof...(As);
++  template <std::size_t N>
+   using ParameterType =
+       typename TupleElementSafe<(N < sizeof...(As)), N, As...>::Type;
+ };
