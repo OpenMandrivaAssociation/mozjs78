@@ -1,0 +1,12 @@
+diff -up mozjs-60.1.0/js/src/moz.build.1~ mozjs-60.1.0/js/src/moz.build
+--- mozjs-60.1.0/js/src/moz.build.1~	2018-09-24 03:53:49.314766553 +0200
++++ mozjs-60.1.0/js/src/moz.build	2018-09-24 03:54:34.704870714 +0200
+@@ -648,6 +648,8 @@ DIRS += [
+ 
+ FINAL_LIBRARY = 'js'
+ 
++USE_LIBS += [ 'mozglue' ]
++
+ if CONFIG['NIGHTLY_BUILD']:
+     DEFINES['ENABLE_BINARYDATA'] = True
+     DEFINES['ENABLE_SIMD'] = True
