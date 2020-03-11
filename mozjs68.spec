@@ -28,7 +28,7 @@ Patch0002:      copy-headers.patch
 Patch0003:      tests-increase-timeout.patch
 #Patch0008:      Always-use-the-equivalent-year-to-determine-the-time-zone.patch
 #Patch0009:      icu_sources_data.py-Decouple-from-Mozilla-build-system.patch
-Patch0010:      icu_sources_data-Write-command-output-to-our-stderr.patch
+#Patch0010:      icu_sources_data-Write-command-output-to-our-stderr.patch
 Patch0011:      tests-For-tests-that-are-skipped-on-64-bit-mips64-is-also.patch
 
 # Build fixes - https://hg.mozilla.org/mozilla-central/rev/ca36a6c4f8a4a0ddaa033fdbe20836d87bbfb873
@@ -91,7 +91,7 @@ pushd ../..
 %patch0003 -p1
 #patch0008 -p1
 #patch0009 -p1
-%patch0010 -p1
+3patch0010 -p1
 %patch0011 -p1
 
 %patch12 -p1
