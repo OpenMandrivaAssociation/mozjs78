@@ -91,7 +91,7 @@ pushd ../..
 %patch0003 -p1
 #patch0008 -p1
 #patch0009 -p1
-3patch0010 -p1
+#patch0010 -p1
 %patch0011 -p1
 
 %patch12 -p1
