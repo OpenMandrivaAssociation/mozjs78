@@ -54,7 +54,7 @@ Patch40:	Save-x28-before-clobbering-it-in-the-regex-compiler.patch
 Patch41:	Save-and-restore-non-volatile-x28-on-ARM64-for-generated-unboxed-object-constructor.patch
 
 Patch50:	firefox-60.2.2-add-riscv64.patch
-Patch51:	mozjs-52.8.1-fix-crash-on-startup.patch
+#Patch51:	mozjs-52.8.1-fix-crash-on-startup.patch
 Patch52:	mozjs-68-compile.patch
 
 #BuildRequires:  autoconf
@@ -130,7 +130,7 @@ pushd ../..
 %patch30 -p1 -b .30~
 
 %patch50 -p1 -b .50~
-%patch51 -p1 -b .51~
+#%patch51 -p1 -b .51~
 %patch52 -p1 -b .52~
 
 # make sure we don't ever accidentally link against bundled security libs
