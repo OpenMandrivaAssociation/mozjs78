@@ -17,7 +17,7 @@
 Summary:	JavaScript interpreter and libraries
 Name:		mozjs68
 Version:	68.6.0
-Release:	1
+Release:	2
 License:	MPLv2.0 and BSD and GPLv2+ and GPLv3+ and LGPLv2.1 and LGPLv2.1+
 URL:		https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Releases/%{major}
 Source0:        https://ftp.mozilla.org/pub/firefox/releases/%{version}esr/source/firefox-%{version}esr.source.tar.xz
@@ -54,7 +54,7 @@ Patch40:	Save-x28-before-clobbering-it-in-the-regex-compiler.patch
 Patch41:	Save-and-restore-non-volatile-x28-on-ARM64-for-generated-unboxed-object-constructor.patch
 
 Patch50:	firefox-60.2.2-add-riscv64.patch
-Patch51:	mozjs-52.8.1-fix-crash-on-startup.patch
+#Patch51:	mozjs-52.8.1-fix-crash-on-startup.patch
 Patch52:	mozjs-68-compile.patch
 
 #BuildRequires:  autoconf
@@ -130,7 +130,7 @@ pushd ../..
 %patch30 -p1 -b .30~
 
 %patch50 -p1 -b .50~
-%patch51 -p1 -b .51~
+#%patch51 -p1 -b .51~
 %patch52 -p1 -b .52~
 
 # make sure we don't ever accidentally link against bundled security libs
@@ -182,6 +182,7 @@ export LDFLAGS="$LDFLAGS -fPIC -fuse-ld=bfd"
   --disable-optimize \
   --enable-pie \
   --disable-jemalloc \
+  --enable-unaligned-private-values
 
 %if 0%{?big_endian}
 echo "Generate big endian version of config/external/icu/data/icud58l.dat"
