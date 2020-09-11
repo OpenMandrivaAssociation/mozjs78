@@ -1,7 +1,7 @@
 %global pre_release %{nil}
 %define pkgname mozjs
-%define api 68
-%define major 68
+%define api 78
+%define major 78
 %define majorlib 0
 %define libmozjs %mklibname %{pkgname} %{api} %{major}
 %define libmozjs_devel %mklibname %{pkgname} %{api} -d
@@ -15,33 +15,32 @@
 %endif
 
 Summary:	JavaScript interpreter and libraries
-Name:		mozjs68
-Version:	68.6.0
-Release:	2
+Name:		mozjs78
+Version:	78.2.0
+Release:	1
 License:	MPLv2.0 and BSD and GPLv2+ and GPLv3+ and LGPLv2.1 and LGPLv2.1+
 URL:		https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Releases/%{major}
 Source0:        https://ftp.mozilla.org/pub/firefox/releases/%{version}esr/source/firefox-%{version}esr.source.tar.xz
 Source10:	http://ftp.gnu.org/gnu/autoconf/autoconf-2.13.tar.gz
 
 # Patches from Debian mozjs60, rebased for mozjs68:
-Patch01:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/fix-soname.patch
-Patch02:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/copy-headers.patch
-Patch03:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/tests-increase-timeout.patch
-Patch09:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/icu_sources_data.py-Decouple-from-Mozilla-build-system.patch
-Patch10:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/icu_sources_data-Write-command-output-to-our-stderr.patch
+Patch01:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/fix-soname.patch
+Patch02:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/copy-headers.patch
+Patch03:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/tests-increase-timeout.patch
+Patch09:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/icu_sources_data.py-Decouple-from-Mozilla-build-system.patch
+Patch10:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/icu_sources_data-Write-command-output-to-our-stderr.patch
  
 # Build fixes - https://hg.mozilla.org/mozilla-central/rev/ca36a6c4f8a4a0ddaa033fdbe20836d87bbfb873
-Patch12:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/emitter.patch
-Patch13:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/emitter_test.patch
+Patch12:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/emitter.patch
  
 # Build fixes
-Patch14:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/init_patch.patch
+Patch14:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/init_patch.patch
 # TODO: Check with mozilla for cause of these fails and re-enable spidermonkey compile time checks if needed
-Patch15:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/spidermonkey_checks_disable.patch
+Patch15:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/spidermonkey_checks_disable.patch
  
 # armv7 fixes
 Patch16:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/rust_armv7.patch
-Patch17:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/armv7_disable_WASM_EMULATE_ARM_UNALIGNED_FP_ACCESS.patch
+Patch17:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/armv7_disable_WASM_EMULATE_ARM_UNALIGNED_FP_ACCESS.patch
  
 # Patches from Fedora firefox package:
 Patch26:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/build-icu-big-endian.patch
@@ -109,7 +108,6 @@ pushd ../..
 %patch10 -p1 -b .10~
  
 %patch12 -p1 -b .12~
-%patch13 -p1 -b .13~
 %patch14 -p1 -b .14~
 %patch15 -p1 -b .15~
  
@@ -132,9 +130,6 @@ pushd ../..
 %patch50 -p1 -b .50~
 #%patch51 -p1 -b .51~
 %patch52 -p1 -b .52~
-
-# make sure we don't ever accidentally link against bundled security libs
-rm -rf security/
 popd
 
 # Remove zlib directory (to be sure using system version)
@@ -166,23 +161,20 @@ export LDFLAGS="$CFLAGS"
 %ifarch %{arm} %{armx}
 export CFLAGS="$CFLAGS -fPIC"
 export CXXFLAGS="$CXXFLAGS -fPIC"
-export LDFLAGS="$LDFLAGS -fPIC -fuse-ld=bfd"
+export LDFLAGS="$LDFLAGS -fPIC"
 %endif
 
 %configure \
   --with-system-icu \
-  --enable-posix-nspr-emulation \
   --with-system-zlib \
-  --enable-tests \
+  --disable-tests \
   --disable-strip \
   --with-intl-api \
   --enable-readline \
-  --enable-optimize="-O3" \
   --enable-shared-js \
-  --disable-optimize \
+  --enable-optimize="%{optflags}" \
   --enable-pie \
-  --disable-jemalloc \
-  --enable-unaligned-private-values
+  --disable-jemalloc
 
 %if 0%{?big_endian}
 echo "Generate big endian version of config/external/icu/data/icud58l.dat"
@@ -217,12 +209,12 @@ ln -s libmozjs-%{major}.so.0 %{buildroot}%{_libdir}/libmozjs-%{major}.so
 tests/jstests.py -d -s --no-progress ../../js/src/js/src/shell/js || :
 
 %files
-%{_bindir}/js68
+%{_bindir}/js%{major}
 
 %files -n %{libmozjs}
-%{_libdir}/libmozjs-68.so.%{majorlib}*
+%{_libdir}/libmozjs-%{major}.so.%{majorlib}*
 
 %files -n %{libmozjs_devel}
-%{_libdir}/libmozjs-68.so
+%{_libdir}/libmozjs-%{major}.so
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/mozjs-%{major}
