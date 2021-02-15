@@ -16,7 +16,7 @@
 
 Summary:	JavaScript interpreter and libraries
 Name:		mozjs78
-Version:	78.2.0
+Version:	78.7.1
 Release:	1
 License:	MPLv2.0 and BSD and GPLv2+ and GPLv3+ and LGPLv2.1 and LGPLv2.1+
 URL:		https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Releases/%{major}
@@ -151,12 +151,15 @@ cd autoconf-2.13
 %make_build install
 
 %build
-%setup_compile_flags
+%set_build_flags
 
-export AUTOCONF="`pwd`"/ac213bin/bin/autoconf
+export AUTOCONF="$(pwd)"/ac213bin/bin/autoconf
+export RUSTFLAGS="-C embed-bitcode"
+	
+export CARGO_PROFILE_RELEASE_LTO=true
 export CFLAGS="%{optflags}"
 export CXXFLAGS="$CFLAGS"
-export LDFLAGS="$CFLAGS"
+export LDFLAGS="%{build_ldflags}"
 
 %ifarch %{arm} %{armx}
 export CFLAGS="$CFLAGS -fPIC"
@@ -172,17 +175,17 @@ export LDFLAGS="$LDFLAGS -fPIC"
   --with-intl-api \
   --enable-readline \
   --enable-shared-js \
-  --enable-optimize="%{optflags}" \
+  --enable-optimize="-O3" \
   --enable-pie \
   --disable-jemalloc
 
 %if 0%{?big_endian}
 echo "Generate big endian version of config/external/icu/data/icud58l.dat"
-pushd ../..
+cd ../..
   ./mach python intl/icu_sources_data.py .
   ls -l config/external/icu/data
   rm -f config/external/icu/data/icudt*l.dat
-popd
+cd -
 %endif
 
 
