@@ -17,7 +17,7 @@
 Summary:	JavaScript interpreter and libraries
 Name:		mozjs78
 Version:	78.15.0
-Release:	2
+Release:	3
 License:	MPLv2.0 and BSD and GPLv2+ and GPLv3+ and LGPLv2.1 and LGPLv2.1+
 URL:		https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Releases/%{major}
 Source0:        https://ftp.mozilla.org/pub/firefox/releases/%{version}esr/source/firefox-%{version}esr.source.tar.xz
@@ -47,6 +47,8 @@ Patch26:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/build-icu-big-e
  
 # Support Python 3 in js tests
 Patch30:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/jstests_python-3.patch
+# Support for Python 3.11
+Patch31:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/0001-Python-Build-Use-r-instead-of-rU-file-read-modes.patch
 
 # aarch64 fixes for -O2
 Patch40:	Save-x28-before-clobbering-it-in-the-regex-compiler.patch
