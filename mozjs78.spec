@@ -44,6 +44,8 @@ Patch17:	https://src.fedoraproject.org/rpms/mozjs78/raw/master/f/armv7_disable_W
  
 # Patches from Fedora firefox package:
 Patch26:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/build-icu-big-endian.patch
+Patch27:	https://src.fedoraproject.org/rpms/mozjs78/raw/rawhide/f/Fixup-compatibility-of-mozbuild-with-Python-3.10.patch
+Patch28:	https://src.fedoraproject.org/rpms/mozjs78/raw/rawhide/f/0001-Python-Build-Use-r-instead-of-rU-file-read-modes.patch
  
 # Support Python 3 in js tests
 Patch30:	https://src.fedoraproject.org/rpms/mozjs68/raw/master/f/jstests_python-3.patch
@@ -100,6 +102,9 @@ you will need to install %{name}-devel.
 
 pushd ../..
 %config_update
+
+%patch27 -p1 -b .27~
+%patch28 -p1 -b .28~
 
 %patch01 -p1 -b .01~
 %patch02 -p1 -b .02~
