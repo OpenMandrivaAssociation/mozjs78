@@ -17,7 +17,7 @@
 Summary:	JavaScript interpreter and libraries
 Name:		mozjs78
 Version:	78.15.0
-Release:	4
+Release:	5
 License:	MPLv2.0 and BSD and GPLv2+ and GPLv3+ and LGPLv2.1 and LGPLv2.1+
 URL:		https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Releases/%{major}
 Source0:        https://ftp.mozilla.org/pub/firefox/releases/%{version}esr/source/firefox-%{version}esr.source.tar.xz
@@ -57,6 +57,9 @@ Patch41:	Save-and-restore-non-volatile-x28-on-ARM64-for-generated-unboxed-object
 Patch50:	firefox-60.2.2-add-riscv64.patch
 #Patch51:	mozjs-52.8.1-fix-crash-on-startup.patch
 Patch52:	mozjs-68-compile.patch
+# The old pass manager has been removed ages ago, so there's no
+# -fnew-pass-manager anymore
+Patch53:	mozjs78-fix-build-with-clang17.patch
 
 #BuildRequires:  autoconf
 BuildRequires:	pkgconfig(icu-i18n)
@@ -103,38 +106,39 @@ you will need to install %{name}-devel.
 pushd ../..
 %config_update
 
-%patch27 -p1 -b .27~
-%patch28 -p1 -b .28~
+%patch 27 -p1 -b .27~
+%patch 28 -p1 -b .28~
 
-%patch01 -p1 -b .01~
-%patch02 -p1 -b .02~
-%patch03 -p1 -b .03~
-%patch09 -p1 -b .09~
-%patch10 -p1 -b .10~
+%patch 01 -p1 -b .01~
+%patch 02 -p1 -b .02~
+%patch 03 -p1 -b .03~
+%patch 09 -p1 -b .09~
+%patch 10 -p1 -b .10~
  
-%patch12 -p1 -b .12~
-%patch14 -p1 -b .14~
-%patch15 -p1 -b .15~
+%patch 12 -p1 -b .12~
+%patch 14 -p1 -b .14~
+%patch 15 -p1 -b .15~
  
 %ifarch %{arm}
 # Correct armv7hl rust triple seems to be armv7-unknown-linux-gnueabihf and not armv7-unknown-linux-gnueabi
-%patch16 -p1 -b .16~
+%patch 16 -p1 -b .16~
 # Disable WASM_EMULATE_ARM_UNALIGNED_FP_ACCESS as it causes the compilation to fail
 # https://bugzilla.mozilla.org/show_bug.cgi?id=1526653
-%patch17 -p1 -b .17~
+%patch 17 -p1 -b .17~
 %endif
  
 # Patch for big endian platforms only
 %if 0%{?big_endian}
-%patch26 -p1 -b .26~
+%patch 26 -p1 -b .26~
 %endif
  
 # Execute tests with Python 3
-%patch30 -p1 -b .30~
+%patch 30 -p1 -b .30~
 
-%patch50 -p1 -b .50~
+%patch 50 -p1 -b .50~
 #%patch51 -p1 -b .51~
-%patch52 -p1 -b .52~
+%patch 52 -p1 -b .52~
+%patch 53 -p1 -b .53~
 popd
 
 # Remove zlib directory (to be sure using system version)
