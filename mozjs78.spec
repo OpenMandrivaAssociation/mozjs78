@@ -62,6 +62,11 @@ Patch52:	mozjs-68-compile.patch
 Patch53:	mozjs78-fix-build-with-clang17.patch
 
 #BuildRequires:  autoconf
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(nspr)
 BuildRequires:	pkgconfig(libffi)
